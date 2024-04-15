@@ -14,16 +14,18 @@ class Author(db.Model):
     # Add validators 
     @validates('name')
     def validate_name(self, key, name):
+    
         if not name:
             raise ValueError('Name is required.')
-        existing_name=Author.query.filter(Author.name ==name).first()
+        existing_name=Author.query.filter_by(name =name).first()
+    
         if existing_name:
             raise ValueError('Name must be unique.')
         return name
 
     @validates('phone_number')
     def validate_phone_number(self, key, phone_number):
-        if not isinstance(phone_number, int) or len(phone_number) != 10:
+        if phone_number and (not all(char.isdigit() for char in phone_number) or len(phone_number) != 10):
             raise ValueError('Phone number must be exactly ten digits.')
         return phone_number
     def __repr__(self):
